@@ -14,7 +14,8 @@
 
 (setq org-breadcrumbs-header-format
       '(:eval
-        (let ((path (org-get-outline-path t)))
+        (let ((path (when (> (funcall outline-level) 0)
+                      (org-get-outline-path t))))
           (mapconcat #'identity
                      (cons
                       (let ((map (make-sparse-keymap)))
@@ -42,7 +43,8 @@
                                    `(lambda ()
                                       (interactive)
                                       (widen)
-                                      (outline-up-heading ,i)
+                                      (if (> (funcall outline-level) 1)
+                                        (outline-up-heading ,i))
                                       (org-narrow-to-subtree)))
                                  (propertize
                                   heading
